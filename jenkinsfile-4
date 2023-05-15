@@ -1,12 +1,24 @@
 pipeline {
-  agent {
-    docker { image 'python-app:latest' }
-  }
+  agent any
+
   stages {
-    stage('Test') {
+    stage('Build') {
       steps {
-        sh 'python --version'
+        sh 'docker build -t jatinrautela/python-app .'
+      }
+    }
+
+    stage('Run') {
+      agent {
+        docker {
+          image 'jatinrautela/python-app'
+        }
+      }
+
+      steps {
+        sh 'python app.py'
       }
     }
   }
 }
+
